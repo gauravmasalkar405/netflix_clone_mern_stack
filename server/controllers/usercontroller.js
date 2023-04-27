@@ -112,25 +112,30 @@ module.exports.addRemoveFromLikedMovies = async (req, res) => {
       if (isMovieAlreadyLiked) {
         const movieIndex = movies.findIndex((id) => id === data._id);
 
-        const updatedLikedMovies = likedMovies.splice(movieIndex, 1);
+        likedMovies.splice(movieIndex, 1);
 
         await User.findByIdAndUpdate(user._id, {
-          likedMovies: updatedLikedMovies,
+          likedMovies: likedMovies,
         });
       }
 
-      // if movie is not in then array then add it
+      // if movie is not in the array then add it
       if (!isMovieAlreadyLiked) {
         await User.findByIdAndUpdate(
           user._id,
           {
             // merging two arrays
-            likedMovies: [...user.likedMovies, data],
+            likedMovies: [...user.likedMovies, ...data],
           },
           { new: true }
         );
       }
     }
+    return res.json({
+      status: true,
+      movies: likedMovies,
+      msg: "movies updated successfully",
+    });
   } catch (error) {
     console.log(error);
     res.json({ status: false, msg: error });
