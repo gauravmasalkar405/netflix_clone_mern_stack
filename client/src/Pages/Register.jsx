@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button } from "@mui/material";
 import backgroundImage from "../assets/login.jpg";
 import logo from "../assets/logo.png";
 import Login from "../components/Login";
 import { useMediaQuery } from "@mui/material";
+import Signup from "../components/Signup";
 
 const Register = () => {
+  const [isSignupPage, setIsSignupPage] = useState(false);
   const isTabletScreens = useMediaQuery("(max-width: 900px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
 
@@ -64,8 +66,9 @@ const Register = () => {
                   backgroundColor: "#b60811",
                 },
               }}
+              onClick={() => setIsSignupPage(!isSignupPage)}
             >
-              Sign Up
+              {isSignupPage ? "Login" : "Sign Up"}
             </Button>
           </Box>
         </Box>
@@ -75,7 +78,7 @@ const Register = () => {
             height: "calc(100vh - 4rem - 0.8rem)",
           }}
         >
-          <Login />
+          {isSignupPage ? <Signup /> : <Login />}
         </Box>
       </Box>
     </Box>

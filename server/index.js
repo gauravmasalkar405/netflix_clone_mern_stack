@@ -4,8 +4,6 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
-const path = require("path");
-const { fileURLToPath } = require("url");
 
 const app = express();
 
@@ -13,11 +11,6 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-
-//serving static files to client ----> first argument is "/assets" which will be used in src to fetch images from backend and The path.join() method is used to construct the absolute path to the "public/assets" directory, based on the current directory (__dirname).
-
-// src to use in frontend to get image from backend ---->   "${host}/assets/${image name}"
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 //routes
 app.use("/api/auth", userRoutes);

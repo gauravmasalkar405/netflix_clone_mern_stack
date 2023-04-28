@@ -4,7 +4,7 @@ const User = require("../models/userModels");
 // register
 module.exports.register = async (req, res) => {
   try {
-    const { username, email, password, profilePicPath } = req.body;
+    const { username, email, password } = req.body;
 
     // check if username and email is already exists
     const [usernameExists, emailExists] = await Promise.all([
@@ -28,14 +28,16 @@ module.exports.register = async (req, res) => {
       username,
       email,
       password: passwordHash,
-      profilePicPath,
     });
 
     // if user is created succesfully send status:true
-    return res.json({ status: true });
+    return res.json({
+      status: true,
+      msg: "Account created successfully, now you can login",
+    });
   } catch (error) {
     console.log(error);
-    res.json({ status: false, msg: error });
+    res.json({ status: false, msg: error.message });
   }
 };
 
@@ -48,19 +50,19 @@ module.exports.login = async (req, res) => {
     const userFound = await User.find({ email });
 
     // if user not found give error
-    if (!userFound) {
-      res.json({ status: false, msg: "User does not exist" });
+    if (userFound.length === 0) {
+      return res.json({ status: false, msg: "User does not exist" });
     }
 
     // maching password
-    const passwordMatch = await bcrypt.compare(password, userFound.password);
+    const passwordMatch = await bcrypt.compare(password, userFound[0].password);
 
     // if password does not match then give error
-    if (!passwordMatch) {
-      res.json({ status: "false", msg: "Invalid password" });
+    if (passwordMatch === false) {
+      return res.json({ status: false, msg: "Invalid password" });
     }
 
-    delete userFound.password;
+    delete userFound[0].password;
 
     // otherwise send user to client
     res.json({
@@ -69,7 +71,7 @@ module.exports.login = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.json({ status: false, msg: error });
+    res.json({ status: false });
   }
 };
 

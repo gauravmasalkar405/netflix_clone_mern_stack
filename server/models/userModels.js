@@ -21,10 +21,6 @@ const userSchema = new mongoose.Schema(
       max: 20,
       required: true,
     },
-    profilePicPath: {
-      type: String,
-      default: "",
-    },
     likedMovies: Array,
   },
   {

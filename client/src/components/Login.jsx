@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -9,6 +9,9 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { loginRoute } from "../routes/userRoutes";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // login schema using yup
 const loginSchema = yup.object().shape({
@@ -33,15 +36,39 @@ const initialValuesLogin = {
 };
 
 const Login = () => {
+  const [loader, setLoader] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
   const navigate = useNavigate();
   const isTabletScreens = useMediaQuery("(max-width: 992px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
 
-  const login = (values) => {};
+  const login = async (values) => {
+    let { email, password } = values;
+
+    email = email.trim();
+
+    try {
+      const response = await axios.post(loginRoute, {
+        email,
+        password,
+      });
+      console.log(response.data.status);
+
+      if (response.data.status === false) {
+        setErrorMsg(response.data.msg);
+      } else {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
+    }
+  };
 
   const handleFormSubmit = (values, onSubmitProps) => {
-    login(values);
-    // onSubmitProps.resetForm();
+    setLoader(true);
+    login(values, onSubmitProps);
   };
 
   return (
@@ -49,7 +76,7 @@ const Login = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: "1.2rem",
+        gap: isMobileScreens ? "0.8rem" : isTabletScreens ? "1rem" : "1.5rem",
         ml: isMobileScreens ? "3rem" : isTabletScreens ? "6rem" : "9rem",
       }}
     >
@@ -57,7 +84,7 @@ const Login = () => {
         sx={{
           maxWidth: "80%",
           pr: isTabletScreens ? "0rem" : "10rem",
-          mt: isMobileScreens ? "2.5rem" : "4rem",
+          mt: isMobileScreens ? "1rem" : "4rem",
         }}
       >
         <Typography
@@ -105,6 +132,13 @@ const Login = () => {
       >
         Ready to watch? Enter your email to create or restart your membership.
       </Typography>
+      {errorMsg && (
+        <Typography
+          sx={{ color: "#d10914", fontSize: "0.6428571428571428rem" }}
+        >
+          {errorMsg}
+        </Typography>
+      )}
       <Box>
         <Formik
           onSubmit={handleFormSubmit}
@@ -142,7 +176,6 @@ const Login = () => {
                     mb: "0.5rem",
                     width: isMobileScreens ? "80%" : "25%",
                     "& .MuiOutlinedInput-root": {
-                      height: isMobileScreens ? "2.5rem" : "3rem",
                       "& fieldset": {
                         borderColor: "rgb(187, 187, 187)", // set border color to blue
                       },
@@ -174,7 +207,6 @@ const Login = () => {
                   sx={{
                     width: isMobileScreens ? "80%" : "25%",
                     "& .MuiOutlinedInput-root": {
-                      height: isMobileScreens ? "2.5rem" : "3rem",
                       "& fieldset": {
                         borderColor: "rgb(187, 187, 187)", // set border color to blue
                       },
@@ -199,7 +231,7 @@ const Login = () => {
                   sx={{
                     color: "white",
                     backgroundColor: "#d10914",
-                    height: isMobileScreens ? "2.5rem" : "3rem",
+                    height: "3.42rem",
                     width: isMobileScreens ? "80%" : "8rem",
                     fontSize: "0.7rem",
                     fontWeight: "600",
@@ -208,7 +240,17 @@ const Login = () => {
                     },
                   }}
                 >
-                  Login
+                  {/* loader */}
+                  {loader ? (
+                    <CircularProgress
+                      sx={{
+                        color: "white",
+                      }}
+                      size={25}
+                    />
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </Box>
             </form>

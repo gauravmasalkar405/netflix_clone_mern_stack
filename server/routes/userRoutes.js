@@ -7,20 +7,12 @@ const {
   addRemoveFromLikedMovies,
 } = require("../controllers/usercontroller");
 
-// saving static file using multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/assets");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
+const upload = multer();
 
-const upload = multer({ storage });
+// when we are sending data as formdata we have use multer and if we are not sending any image file we have to use upload.none() method otherwise for images we use upload.single("/image name")
 
 // register route
-router.post("/register", upload.single("profilePic"), register);
+router.post("/register", upload.single(), register);
 
 //  login route
 router.post("/login", login);
