@@ -21,7 +21,10 @@ const userSchema = new mongoose.Schema(
       max: 20,
       required: true,
     },
-    likedMovies: Array,
+    likedMovies: {
+      type: Array,
+      default: [],
+    },
   },
   {
     timestamps: true,

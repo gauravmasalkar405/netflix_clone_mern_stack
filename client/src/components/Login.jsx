@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { loginRoute } from "../routes/userRoutes";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../features/sllice";
 
 // login schema using yup
 const loginSchema = yup.object().shape({
@@ -36,6 +38,7 @@ const initialValuesLogin = {
 };
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const navigate = useNavigate();
@@ -52,11 +55,15 @@ const Login = () => {
         email,
         password,
       });
-      console.log(response.data.status);
 
       if (response.data.status === false) {
         setErrorMsg(response.data.msg);
       } else {
+        dispatch(
+          setLogin({
+            user: response.data.userFound,
+          })
+        );
         navigate("/home");
       }
     } catch (error) {
