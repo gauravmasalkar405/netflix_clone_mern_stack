@@ -87,7 +87,7 @@ const Signup = () => {
           minHeight: "475px",
           width: "87%",
           maxWidth: "350px",
-          backgroundColor: "rgb(0 5 16 / 75%);",
+          backgroundColor: "rgb(0 5 16 / 75%)",
         }}
       >
         <Box sx={{ margin: "1.5rem" }}>

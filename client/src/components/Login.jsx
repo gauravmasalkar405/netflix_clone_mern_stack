@@ -13,7 +13,6 @@ import axios from "axios";
 import { loginRoute } from "../routes/userRoutes";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../features/sllice";
 
 // login schema using yup
 const loginSchema = yup.object().shape({
@@ -59,11 +58,6 @@ const Login = () => {
       if (response.data.status === false) {
         setErrorMsg(response.data.msg);
       } else {
-        dispatch(
-          setLogin({
-            user: response.data.userFound,
-          })
-        );
         navigate("/home");
       }
     } catch (error) {
