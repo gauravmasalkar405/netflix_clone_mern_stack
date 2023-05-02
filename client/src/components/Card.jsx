@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Box, Typography, IconButton, List, ListItem } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  List,
+  ListItem,
+  useMediaQuery,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import video from "../assets/video.mp4";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -12,6 +19,11 @@ import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDown
 const Card = ({ movieData, isLiked = false }) => {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+
+  const isTabletScreens = useMediaQuery("(max-width: 992px)");
+  const isMobileScreens = useMediaQuery("(max-width: 480px)");
+  const isDesktopScreens = useMediaQuery("(min-width:1000px)");
+
   return (
     <Box
       onMouseEnter={() => {
@@ -21,8 +33,12 @@ const Card = ({ movieData, isLiked = false }) => {
         setIsHovered(false);
       }}
       sx={{
-        maxWidth: "230px",
-        width: "230px",
+        maxWidth: isMobileScreens
+          ? "175px"
+          : isTabletScreens
+          ? "2100PX"
+          : "230px",
+        width: isMobileScreens ? "175px" : isTabletScreens ? "210PX" : "230px",
         height: "100%",
         cursor: "pointer",
         position: "relative",
@@ -43,8 +59,16 @@ const Card = ({ movieData, isLiked = false }) => {
         <Box
           sx={{
             zIndex: "99",
-            height: "max-content",
-            width: "20rem",
+            height: isMobileScreens
+              ? "auto"
+              : isTabletScreens
+              ? "18rem"
+              : "max-content",
+            width: isMobileScreens
+              ? "12rem"
+              : isTabletScreens
+              ? "16rem"
+              : "20rem",
             position: "absolute",
             top: "-18vh",
             left: "0",
@@ -93,16 +117,79 @@ const Card = ({ movieData, isLiked = false }) => {
           </Box>
 
           {/* info container */}
-          <Box sx={{ padding: "1rem", gap: "0.5rem" }}>
-            <Typography onClick={() => navigate("/player")}>
+          <Box
+            sx={{
+              padding: "1rem",
+              gap: "0.5rem",
+            }}
+          >
+            <Typography
+              onClick={() => navigate("/player")}
+              sx={{ color: "white" }}
+            >
               {movieData.name}
             </Typography>
             <Box>
-              <Box sx={{ display: "flex", gap: "1rem" }}>
-                <IconButton onClick={() => navigate("/player")}>
-                  <PlayCircleOutlineIcon
+              <Box
+                sx={{
+                  mt: "0.6rem",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <PlayCircleOutlineIcon
+                  onClick={() => navigate("/player")}
+                  sx={{
+                    fontSize: isMobileScreens
+                      ? "1.2rem"
+                      : isTabletScreens
+                      ? "1.6rem"
+                      : "2rem",
+                    cursor: "pointer",
+                    transition: "0.3s ease-in-out",
+                    color: "white",
+                    "&:hover": {
+                      color: "#b8b8b8",
+                    },
+                  }}
+                />
+
+                <ThumbUpIcon
+                  sx={{
+                    fontSize: isMobileScreens
+                      ? "1.2rem"
+                      : isTabletScreens
+                      ? "1.6rem"
+                      : "2rem",
+                    cursor: "pointer",
+                    transition: "0.3s ease-in-out",
+                    color: "white",
+                    "&:hover": {
+                      color: "#b8b8b8",
+                    },
+                  }}
+                />
+
+                <ThumbDownIcon
+                  sx={{
+                    fontSize: isMobileScreens
+                      ? "1.2rem"
+                      : isTabletScreens
+                      ? "1.6rem"
+                      : "2rem",
+                    cursor: "pointer",
+                    transition: "0.3s ease-in-out",
+                    color: "white",
+                    "&:hover": {
+                      color: "#b8b8b8",
+                    },
+                  }}
+                />
+
+                {isLiked ? (
+                  <CheckIcon
                     sx={{
-                      fontSize: "2rem",
+                      fontSize: isMobileScreens ? "1.2rem" : "2rem",
                       cursor: "pointer",
                       transition: "0.3s ease-in-out",
                       color: "white",
@@ -111,11 +198,14 @@ const Card = ({ movieData, isLiked = false }) => {
                       },
                     }}
                   />
-                </IconButton>
-                <IconButton>
-                  <ThumbUpIcon
+                ) : (
+                  <AddCircleOutlineOutlinedIcon
                     sx={{
-                      fontSize: "2rem",
+                      fontSize: isMobileScreens
+                        ? "1.2rem"
+                        : isTabletScreens
+                        ? "1.6rem"
+                        : "2rem",
                       cursor: "pointer",
                       transition: "0.3s ease-in-out",
                       color: "white",
@@ -124,50 +214,23 @@ const Card = ({ movieData, isLiked = false }) => {
                       },
                     }}
                   />
-                </IconButton>
-                <IconButton>
-                  <ThumbDownIcon
-                    sx={{
-                      fontSize: "2rem",
-                      cursor: "pointer",
-                      transition: "0.3s ease-in-out",
-                      color: "white",
-                      "&:hover": {
-                        color: "#b8b8b8",
-                      },
-                    }}
-                  />
-                </IconButton>
-                <IconButton>
-                  {isLiked ? (
-                    <CheckIcon
-                      sx={{
-                        fontSize: "2rem",
-                        cursor: "pointer",
-                        transition: "0.3s ease-in-out",
-                        color: "white",
-                        "&:hover": {
-                          color: "#b8b8b8",
-                        },
-                      }}
-                    />
-                  ) : (
-                    <AddCircleOutlineOutlinedIcon
-                      sx={{
-                        fontSize: "2rem",
-                        cursor: "pointer",
-                        transition: "0.3s ease-in-out",
-                        color: "white",
-                        "&:hover": {
-                          color: "#b8b8b8",
-                        },
-                      }}
-                    />
-                  )}
-                </IconButton>
-              </Box>
-              <Box>
-                <KeyboardArrowDownOutlinedIcon />
+                )}
+
+                <KeyboardArrowDownOutlinedIcon
+                  sx={{
+                    fontSize: isMobileScreens
+                      ? "1.2rem"
+                      : isTabletScreens
+                      ? "1.6rem"
+                      : "2rem",
+                    cursor: "pointer",
+                    transition: "0.3s ease-in-out",
+                    color: "white",
+                    "&:hover": {
+                      color: "#b8b8b8",
+                    },
+                  }}
+                />
               </Box>
             </Box>
             <Box>

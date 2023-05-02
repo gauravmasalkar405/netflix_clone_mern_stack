@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./Pages/Register";
 import Home from "./Pages/Home";
-import LikedMovies from "./Pages/LikedMovies";
 import Player from "./components/Player";
+import Movies from "./Pages/Movies";
+import TvShows from "./Pages/TvShows";
 
 function App() {
   return (
@@ -11,8 +12,9 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Register />}></Route>
           <Route exact path="/home" element={<Home />}></Route>
-          <Route exact path="/likedmovies" element={<LikedMovies />}></Route>
           <Route exact path="/player" element={<Player />}></Route>
+          <Route exact path="/movies" element={<Movies />}></Route>
+          <Route exact path="/tv" element={<TvShows />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

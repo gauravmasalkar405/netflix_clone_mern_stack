@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography, IconButton } from "@mui/material";
+import { Box, Typography, IconButton, useMediaQuery } from "@mui/material";
 import Card from "./Card";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -7,6 +7,11 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 const CardSlider = ({ data, title }) => {
   const [showControls, setShowControls] = useState(false);
   const [sliderPosition, setSliderPosition] = useState(0);
+
+  // media querries
+  const isTabletScreens = useMediaQuery("(max-width: 992px)");
+  const isMobileScreens = useMediaQuery("(max-width: 480px)");
+  const isDesktopScreens = useMediaQuery("(min-width:1000px)");
 
   const handleSliderLeft = () => {
     setSliderPosition(sliderPosition - 200);
@@ -20,7 +25,16 @@ const CardSlider = ({ data, title }) => {
     <Box>
       <Typography
         variant="h1"
-        sx={{ ml: "50px", fontSize: "2.1rem", fontWeight: "600" }}
+        sx={{
+          ml: isMobileScreens ? "25px" : isTabletScreens ? "35px" : "50px",
+          fontSize: isMobileScreens
+            ? "1.5rem"
+            : isTabletScreens
+            ? "2.1rem"
+            : "2.8rem",
+          fontWeight: "600",
+          color: "white",
+        }}
       >
         {title}
       </Typography>
@@ -61,7 +75,7 @@ const CardSlider = ({ data, title }) => {
               gap: "1rem",
               transform: `translateX(${sliderPosition}px)`,
               transition: "0.3s ease-in-out",
-              ml: "50px",
+              ml: isMobileScreens ? "25px" : isTabletScreens ? "35px" : "50px",
             }}
           >
             {data.map((movie, index) => {

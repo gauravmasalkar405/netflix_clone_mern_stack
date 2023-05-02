@@ -29,6 +29,7 @@ const Home = () => {
     if (genresLoaded) {
       dispatch(fetchMovies({ genres, type: "all" }));
     }
+    console.log(movies);
   }, [genresLoaded]);
 
   return (

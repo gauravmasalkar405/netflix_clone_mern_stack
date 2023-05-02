@@ -1,12 +1,13 @@
 import React from "react";
 import CardSlider from "./CardSlider";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 
 const Slider = ({ movies }) => {
   // this will select movies only in that range
   const getMoviesFromRange = (from, to) => {
     return movies.slice(from, to);
   };
+
   return (
     <Box sx={{ mt: "25px" }}>
       <CardSlider title="Trending Now" data={getMoviesFromRange(0, 10)} />
