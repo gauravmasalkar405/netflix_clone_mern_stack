@@ -4,6 +4,7 @@ import Home from "./Pages/Home";
 import Player from "./components/Player";
 import Movies from "./Pages/Movies";
 import TvShows from "./Pages/TvShows";
+import MyList from "./Pages/MyList";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route exact path="/player" element={<Player />}></Route>
           <Route exact path="/movies" element={<Movies />}></Route>
           <Route exact path="/tv" element={<TvShows />}></Route>
+          <Route exact path="/mylist" element={<MyList />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

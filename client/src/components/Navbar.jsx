@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { setLogout } from "../app/store";
 
 const links = [
   { name: "Home", link: "/home" },
@@ -33,6 +34,7 @@ const Navbar = () => {
   const isDesktopScreens = useMediaQuery("(min-width:1000px)");
 
   const logout = () => {
+    dispatch(setLogout());
     navigate("/");
   };
 

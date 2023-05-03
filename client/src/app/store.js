@@ -5,10 +5,12 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_KEY, TMDB_BASE_URL } from "../utils/constants";
+import { likedMovies, addRemove } from "../routes/userRoutes";
 
 const initialState = {
-  movies: [],
+  user: null,
   genresLoaded: false,
+  movies: [],
   genres: [],
 };
 
@@ -81,18 +83,20 @@ export const getUsersLikedMovies = createAsyncThunk(
   "netflix/getLiked",
   async (email) => {
     const {
-      data: { movies },
-    } = await axios.get(`http://localhost:5000/api/user/liked/${email}`);
-    return movies;
+      data: { likedMovies },
+    } = await axios.post(likedMovies, {
+      email,
+    });
+    return likedMovies;
   }
 );
 
-export const removeMovieFromLiked = createAsyncThunk(
+export const addRemoveMovieFromLiked = createAsyncThunk(
   "netflix/deleteLiked",
   async ({ movieId, email }) => {
     const {
       data: { movies },
-    } = await axios.put("http://localhost:5000/api/user/remove", {
+    } = await axios.post(addRemove, {
       email,
       movieId,
     });
@@ -103,6 +107,14 @@ export const removeMovieFromLiked = createAsyncThunk(
 const NetflixSlice = createSlice({
   name: "Netflix",
   initialState,
+  reducers: {
+    setLogin: (state, action) => {
+      state.user = action.payload.user;
+    },
+    setLogout: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getGenres.fulfilled, (state, action) => {
       state.genres = action.payload;
@@ -117,7 +129,7 @@ const NetflixSlice = createSlice({
     builder.addCase(getUsersLikedMovies.fulfilled, (state, action) => {
       state.movies = action.payload;
     });
-    builder.addCase(removeMovieFromLiked.fulfilled, (state, action) => {
+    builder.addCase(addRemoveMovieFromLiked.fulfilled, (state, action) => {
       state.movies = action.payload;
     });
   },
@@ -129,4 +141,5 @@ export const store = configureStore({
   },
 });
 
-export const { setGenres, setMovies } = NetflixSlice.actions;
+export const { setGenres, setMovies, setLogin, setLogout } =
+  NetflixSlice.actions;

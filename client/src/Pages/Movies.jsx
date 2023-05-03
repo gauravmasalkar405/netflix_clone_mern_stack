@@ -27,7 +27,6 @@ const Movies = () => {
     if (genresLoaded) {
       dispatch(fetchMovies({ genres, type: "tv" }));
     }
-    console.log(movies);
   }, [genresLoaded]);
 
   return (

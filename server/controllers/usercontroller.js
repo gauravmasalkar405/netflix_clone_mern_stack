@@ -89,7 +89,7 @@ module.exports.getLikedMovies = async (req, res) => {
     }
 
     // sending liked movies to client
-    res.json({ status: true, likedMovies: user.likedMovies });
+    res.json({ status: true, user });
   } catch (error) {
     console.log(error);
     res.json({ status: true, msg: error });
@@ -101,18 +101,20 @@ module.exports.addRemoveFromLikedMovies = async (req, res) => {
   try {
     const { email, data } = req.body;
 
+    console.log(email, data);
+
     // finding user
     const user = await User.findOne({ email });
 
     if (user) {
-      const { likedMovies } = user;
+      let { likedMovies } = user;
 
       // check if that movie is already exist in array
       const isMovieAlreadyLiked = likedMovies.find(({ id }) => id === data.id);
 
       // if movie exists then remove it
       if (isMovieAlreadyLiked) {
-        const movieIndex = movies.findIndex((id) => id === data._id);
+        const movieIndex = likedMovies.findIndex((id) => id === data._id);
 
         likedMovies.splice(movieIndex, 1);
 
@@ -121,23 +123,24 @@ module.exports.addRemoveFromLikedMovies = async (req, res) => {
         });
       }
 
-      // if movie is not in the array then add it
+      // if movie is not in the array that is not liked then add it
       if (!isMovieAlreadyLiked) {
         await User.findByIdAndUpdate(
           user._id,
           {
             // merging two arrays
-            likedMovies: [...user.likedMovies, ...data],
+            likedMovies: [...user.likedMovies, data],
           },
           { new: true }
         );
       }
+
+      return res.json({
+        status: true,
+        movies: likedMovies,
+        msg: "movies updated successfully",
+      });
     }
-    return res.json({
-      status: true,
-      movies: likedMovies,
-      msg: "movies updated successfully",
-    });
   } catch (error) {
     console.log(error);
     res.json({ status: false, msg: error });

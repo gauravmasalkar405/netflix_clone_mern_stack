@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  IconButton,
-  List,
-  ListItem,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Typography, List, ListItem, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import video from "../assets/video.mp4";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -15,14 +8,40 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import CheckIcon from "@mui/icons-material/Check";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { addRemove } from "../routes/userRoutes";
 
-const Card = ({ movieData, isLiked = false }) => {
+const Card = ({ index, movieData }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [likedMovies, setLikedMovies] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.netflix.user);
 
   const isTabletScreens = useMediaQuery("(max-width: 992px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
   const isDesktopScreens = useMediaQuery("(min-width:1000px)");
+
+  const addToLikedMovies = async () => {
+    try {
+      if (user.length !== 0) {
+        const response = await axios.post(addRemove, {
+          email: user[0].email,
+          data: movieData,
+        });
+
+        if (response.data.status) {
+          // console.log(response.data.movies);
+
+          // checking movie is liked or not
+          setIsLiked(!isLiked);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box
@@ -42,6 +61,7 @@ const Card = ({ movieData, isLiked = false }) => {
         height: "100%",
         cursor: "pointer",
         position: "relative",
+        mb: "1rem",
       }}
     >
       {/* getting movie images */}
@@ -155,6 +175,7 @@ const Card = ({ movieData, isLiked = false }) => {
                 />
 
                 <ThumbUpIcon
+                  onClick={() => addToLikedMovies()}
                   sx={{
                     fontSize: isMobileScreens
                       ? "1.2rem"
