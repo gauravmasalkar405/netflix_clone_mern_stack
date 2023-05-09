@@ -1,20 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, List, ListItem, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import video from "../assets/video.mp4";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import CheckIcon from "@mui/icons-material/Check";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { addRemove } from "../routes/userRoutes";
+import { addRemove, likedMovies } from "../routes/userRoutes";
 
 const Card = ({ index, movieData }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [likedMovies, setLikedMovies] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state.netflix.user);
@@ -32,9 +30,6 @@ const Card = ({ index, movieData }) => {
         });
 
         if (response.data.status) {
-          // console.log(response.data.movies);
-
-          // checking movie is liked or not
           setIsLiked(!isLiked);
         }
       }
@@ -42,6 +37,22 @@ const Card = ({ index, movieData }) => {
       console.log(error);
     }
   };
+
+  // const getLikedMovies = async () => {
+  //   try {
+  //     const response = await axios.post(likedMovies, {
+  //       email: user[0].email,
+  //     });
+
+  //     console.log(response.data.user.likedMovies);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getLikedMovies();
+  // }, []);
 
   return (
     <Box
@@ -174,7 +185,7 @@ const Card = ({ index, movieData }) => {
                   }}
                 />
 
-                <ThumbUpIcon
+                <FavoriteIcon
                   onClick={() => addToLikedMovies()}
                   sx={{
                     fontSize: isMobileScreens
@@ -184,25 +195,9 @@ const Card = ({ index, movieData }) => {
                       : "2rem",
                     cursor: "pointer",
                     transition: "0.3s ease-in-out",
-                    color: "white",
+                    color: isLiked ? "#E50914" : "white",
                     "&:hover": {
-                      color: "#b8b8b8",
-                    },
-                  }}
-                />
-
-                <ThumbDownIcon
-                  sx={{
-                    fontSize: isMobileScreens
-                      ? "1.2rem"
-                      : isTabletScreens
-                      ? "1.6rem"
-                      : "2rem",
-                    cursor: "pointer",
-                    transition: "0.3s ease-in-out",
-                    color: "white",
-                    "&:hover": {
-                      color: "#b8b8b8",
+                      color: isLiked ? "#cc2b33" : "#b8b8b8",
                     },
                   }}
                 />
