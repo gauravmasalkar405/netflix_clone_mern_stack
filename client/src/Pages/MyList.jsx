@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import { likedMovies } from "../routes/userRoutes";
 import Card from "../components/Card";
-
 import axios from "axios";
+import { setLikedMoviesAndShows } from "../app/store";
 
 const MyList = () => {
   const [movies, setMovies] = useState();
+  const [isLikedButtonClicked, setIsLikedButtonClicked] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.netflix.user);
 
@@ -16,21 +17,32 @@ const MyList = () => {
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
   const isDesktopScreens = useMediaQuery("(min-width:1000px)");
 
+  // we will use this to re render component as liked movie changes
+  const changesLiked = () => {
+    setIsLikedButtonClicked(!isLikedButtonClicked);
+  };
+
   // to fetch likedmovies
   useEffect(() => {
     if (user.length !== 0) {
       getMovies();
     }
-  }, [user]);
+  }, [isLikedButtonClicked]);
 
   //req to get likedMovies and we will call it in above useEffect after user is set
   const getMovies = async () => {
     const response = await axios.post(likedMovies, {
       email: user[0].email,
     });
-    console.log("req made");
     if (response.data.status) {
       setMovies(response.data.user.likedMovies);
+
+      // storing liked movies in redux store
+      dispatch(
+        setLikedMoviesAndShows({
+          likedMoviesAndShows: response.data.user.likedMovies,
+        })
+      );
     }
   };
 
@@ -60,7 +72,8 @@ const MyList = () => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            gap: "6%",
+            justifyContent: "flex-start",
             flexWrap: "wrap",
             transition: "0.3s ease-in-out",
             ml: isMobileScreens ? "25px" : isTabletScreens ? "35px" : "50px",
@@ -68,7 +81,15 @@ const MyList = () => {
           }}
         >
           {movies.map((movie, index) => {
-            return <Card movieData={movie} index={index} key={movie.id} />;
+            return (
+              <Card
+                movieData={movie}
+                index={index}
+                key={movie.id}
+                changesLiked={changesLiked}
+                isFavouritePage={true}
+              />
+            );
           })}
         </Box>
       )}

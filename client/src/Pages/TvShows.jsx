@@ -25,7 +25,7 @@ const TvShows = () => {
 
   useEffect(() => {
     if (genresLoaded) {
-      dispatch(fetchMovies({ genres, type: "movie" }));
+      dispatch(fetchMovies({ genres, type: "tv" }));
     }
   }, [genresLoaded]);
 
@@ -40,7 +40,7 @@ const TvShows = () => {
           mt: isMobileScreens ? "20%" : "8%",
         }}
       >
-        <SelectredGenre genres={genres} type="movie" />
+        <SelectredGenre genres={genres} type="tv" />
         {movies.length ? <Slider movies={movies} /> : <NotAvailable />}
       </Box>
     </Box>

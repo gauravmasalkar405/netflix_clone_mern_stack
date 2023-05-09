@@ -9,6 +9,9 @@ import homeTitle from "../assets/homeTitle.webp";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMovies, getGenres } from "../app/store";
 import Slider from "../components/Slider";
+import axios from "axios";
+import { setLikedMoviesAndShows } from "../app/store";
+import { likedMovies } from "../routes/userRoutes";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -19,6 +22,7 @@ const Home = () => {
   const movies = useSelector((state) => state.netflix.movies);
   const genres = useSelector((state) => state.netflix.genres);
   const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
+  const user = useSelector((state) => state.netflix.user);
 
   // calling getGenres on first render
   useEffect(() => {
@@ -30,6 +34,28 @@ const Home = () => {
       dispatch(fetchMovies({ genres, type: "all" }));
     }
   }, [genresLoaded]);
+
+  // getting likedMovies on first render
+  useEffect(() => {
+    if (user.length !== 0) {
+      getMovies();
+    }
+  }, [genresLoaded]);
+
+  //req to get likedMovies and we will call it in above useEffect after user is set
+  const getMovies = async () => {
+    const response = await axios.post(likedMovies, {
+      email: user[0].email,
+    });
+    if (response.data.status) {
+      // storing liked movies in redux store
+      dispatch(
+        setLikedMoviesAndShows({
+          likedMoviesAndShows: response.data.user.likedMovies,
+        })
+      );
+    }
+  };
 
   return (
     <Box sx={{ position: "relative", background: "black", color: "white" }}>

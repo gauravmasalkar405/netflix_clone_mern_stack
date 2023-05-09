@@ -9,13 +9,16 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { addRemove, likedMovies } from "../routes/userRoutes";
+import { addRemove } from "../routes/userRoutes";
 
-const Card = ({ index, movieData }) => {
+const Card = ({ index, movieData, changesLiked }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state.netflix.user);
+  const likedMoviesAndShows = useSelector(
+    (state) => state.netflix.likedMoviesAndShows
+  );
 
   const isTabletScreens = useMediaQuery("(max-width: 992px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
@@ -36,23 +39,19 @@ const Card = ({ index, movieData }) => {
     } catch (error) {
       console.log(error);
     }
+
+    changesLiked();
   };
 
-  // const getLikedMovies = async () => {
-  //   try {
-  //     const response = await axios.post(likedMovies, {
-  //       email: user[0].email,
-  //     });
-
-  //     console.log(response.data.user.likedMovies);
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getLikedMovies();
-  // }, []);
+  useEffect(() => {
+    if (likedMoviesAndShows) {
+      likedMoviesAndShows.forEach((ele) => {
+        if (ele.id === movieData.id) {
+          setIsLiked(true);
+        }
+      });
+    }
+  }, [likedMoviesAndShows]);
 
   return (
     <Box

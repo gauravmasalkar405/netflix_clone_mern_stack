@@ -12,6 +12,7 @@ const initialState = {
   genresLoaded: false,
   movies: [],
   genres: [],
+  likedMoviesAndShows: null,
 };
 
 export const getGenres = createAsyncThunk("netflix/genres", async () => {
@@ -114,6 +115,9 @@ const NetflixSlice = createSlice({
     setLogout: (state) => {
       state.user = null;
     },
+    setLikedMoviesAndShows: (state, action) => {
+      state.likedMoviesAndShows = action.payload.likedMoviesAndShows;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getGenres.fulfilled, (state, action) => {
@@ -141,5 +145,10 @@ export const store = configureStore({
   },
 });
 
-export const { setGenres, setMovies, setLogin, setLogout } =
-  NetflixSlice.actions;
+export const {
+  setGenres,
+  setMovies,
+  setLogin,
+  setLogout,
+  setLikedMoviesAndShows,
+} = NetflixSlice.actions;

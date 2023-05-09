@@ -101,8 +101,6 @@ module.exports.addRemoveFromLikedMovies = async (req, res) => {
   try {
     const { email, data } = req.body;
 
-    console.log(email, data);
-
     // finding user
     const user = await User.findOne({ email });
 
@@ -114,7 +112,9 @@ module.exports.addRemoveFromLikedMovies = async (req, res) => {
 
       // if movie exists then remove it
       if (isMovieAlreadyLiked) {
-        const movieIndex = likedMovies.findIndex((id) => id === data._id);
+        const movieIndex = likedMovies.findIndex(
+          (movie) => movie.id === data.id
+        );
 
         likedMovies.splice(movieIndex, 1);
 

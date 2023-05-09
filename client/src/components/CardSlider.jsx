@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, IconButton, useMediaQuery } from "@mui/material";
 import Card from "./Card";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -14,11 +14,15 @@ const CardSlider = ({ data, title }) => {
   const isDesktopScreens = useMediaQuery("(min-width:1000px)");
 
   const handleSliderLeft = () => {
-    setSliderPosition(sliderPosition - 200);
+    if (sliderPosition >= -1600) {
+      setSliderPosition(sliderPosition - 200);
+    }
   };
 
   const handleSliderRight = () => {
-    setSliderPosition(sliderPosition + 200);
+    if (sliderPosition < 400) {
+      setSliderPosition(sliderPosition + 200);
+    }
   };
 
   return (
