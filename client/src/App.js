@@ -5,6 +5,7 @@ import Player from "./components/Player";
 import Movies from "./Pages/Movies";
 import TvShows from "./Pages/TvShows";
 import MyList from "./Pages/MyList";
+import MovieInfo from "./components/MovieInfo";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route exact path="/movies" element={<Movies />}></Route>
           <Route exact path="/tv" element={<TvShows />}></Route>
           <Route exact path="/mylist" element={<MyList />}></Route>
+          <Route exact path="/movieinfo" element={<MovieInfo />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

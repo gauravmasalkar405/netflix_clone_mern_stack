@@ -5,6 +5,7 @@ import {
   IconButton,
   useMediaQuery,
   InputBase,
+  Typography,
 } from "@mui/material";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +16,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { setLogout } from "../app/store";
+import axios from "axios";
+import MovieSuggestions from "./MovieSuggestions";
 
 const links = [
   { name: "Home", link: "/home" },
@@ -24,9 +27,11 @@ const links = [
 ];
 
 const Navbar = () => {
+  const [movieSuggestions, setMovieSuggestions] = useState([]);
   const [scrollActive, setScrollActive] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [isMenuButtonClicked, setIsMenuButtonClicked] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isTabletScreens = useMediaQuery("(max-width: 992px)");
@@ -62,6 +67,22 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // handling search query
+  const handleSearch = async (e) => {
+    setSearchQuery(e.target.value);
+    setScrollActive(true);
+
+    // if length of search query is greater than 3 then only show suggestion
+    if (e.target.value.length > 3) {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?api_key=6668b1c96540af59cdaa98a7c7509233&query=${searchQuery}`
+      );
+      setMovieSuggestions(response.data.results.slice(0, 10));
+    } else {
+      setMovieSuggestions([]);
+    }
+  };
 
   return (
     <Box>
@@ -148,12 +169,15 @@ const Navbar = () => {
                   "width 0.5s ease-in-out, padding-left 0.5s ease-in-out",
                 width: expanded ? "100%" : "auto",
                 paddingLeft: expanded ? "1.2rem" : "0",
+                position: "relative",
               }}
             >
               {/* search bar */}
               {expanded && (
                 <InputBase
                   placeholder="...search"
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e)}
                   sx={{
                     color: "white",
                     pl: "1.2rem",
@@ -165,6 +189,21 @@ const Navbar = () => {
               <IconButton onClick={handleExpand}>
                 <SearchIcon sx={{ color: "white", fontSize: "1.7rem" }} />
               </IconButton>
+
+              {/* search results */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "5rem",
+                  left: "-25vw",
+                  backgroundColor: "rgb(3 10 26 / 63%)",
+                  width: "80vw",
+                }}
+              >
+                {movieSuggestions.map((movie) => {
+                  return <MovieSuggestions key={movie.id} movie={movie} />;
+                })}
+              </Box>
             </Box>
           ) : (
             <Box
@@ -176,11 +215,14 @@ const Navbar = () => {
                 gap: "3rem",
                 padding: "0.1rem 0.2rem 0.1rem 0.2rem",
                 borderRadius: "5px",
+                position: "relative",
               }}
             >
               {/* search bar */}
               <InputBase
                 placeholder="...search"
+                value={searchQuery}
+                onChange={(e) => handleSearch(e)}
                 sx={{ color: "white", pl: "1.2rem" }}
               />
 
@@ -189,6 +231,20 @@ const Navbar = () => {
               <IconButton>
                 <SearchIcon sx={{ color: "white", fontSize: "1.7rem" }} />
               </IconButton>
+
+              {/* search results */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "5rem",
+                  backgroundColor: "rgb(3 10 26 / 63%)",
+                  width: "100%",
+                }}
+              >
+                {movieSuggestions.map((movie) => {
+                  return <MovieSuggestions key={movie.id} movie={movie} />;
+                })}
+              </Box>
             </Box>
           )}
 

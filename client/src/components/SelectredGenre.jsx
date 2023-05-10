@@ -7,7 +7,6 @@ const SelectredGenre = ({ genres, type }) => {
   const dispatch = useDispatch();
   const isTabletScreens = useMediaQuery("(max-width: 992px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
-  const isDesktopScreens = useMediaQuery("(min-width:1000px)");
   return (
     <Box>
       <select

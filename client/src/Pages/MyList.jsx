@@ -15,7 +15,6 @@ const MyList = () => {
 
   const isTabletScreens = useMediaQuery("(max-width: 992px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
-  const isDesktopScreens = useMediaQuery("(min-width:1000px)");
 
   // we will use this to re render component as liked movie changes
   const changesLiked = () => {

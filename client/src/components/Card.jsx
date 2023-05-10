@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, List, ListItem, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import video from "../assets/video.mp4";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CheckIcon from "@mui/icons-material/Check";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
-import { useSelector } from "react-redux";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { addRemove } from "../routes/userRoutes";
+import { setMovieInfo } from "../app/store";
 
 const Card = ({ index, movieData, changesLiked }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.netflix.user);
   const likedMoviesAndShows = useSelector(
     (state) => state.netflix.likedMoviesAndShows
@@ -22,8 +24,8 @@ const Card = ({ index, movieData, changesLiked }) => {
 
   const isTabletScreens = useMediaQuery("(max-width: 992px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
-  const isDesktopScreens = useMediaQuery("(min-width:1000px)");
 
+  // adding to liked movies
   const addToLikedMovies = async () => {
     try {
       if (user.length !== 0) {
@@ -41,6 +43,16 @@ const Card = ({ index, movieData, changesLiked }) => {
     }
 
     changesLiked();
+  };
+
+  //when movieinfo button is clicked movie data will be stored in store
+  const movieInfoButton = () => {
+    navigate("/movieinfo");
+    dispatch(
+      setMovieInfo({
+        movieInfo: movieData,
+      })
+    );
   };
 
   useEffect(() => {
@@ -74,7 +86,7 @@ const Card = ({ index, movieData, changesLiked }) => {
         mb: "1rem",
       }}
     >
-      {/* getting movie images */}
+      {/* getting movie image */}
       <img
         src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
         alt="movie"
@@ -231,7 +243,8 @@ const Card = ({ index, movieData, changesLiked }) => {
                   />
                 )}
 
-                <KeyboardArrowDownOutlinedIcon
+                <InfoOutlinedIcon
+                  onClick={() => movieInfoButton()}
                   sx={{
                     fontSize: isMobileScreens
                       ? "1.2rem"
@@ -247,15 +260,6 @@ const Card = ({ index, movieData, changesLiked }) => {
                   }}
                 />
               </Box>
-            </Box>
-            <Box>
-              <List sx={{ gap: "1rem" }}>
-                {movieData.genres.map((genre) => {
-                  <ListItem key={genre} sx={{ pr: "0.7rem" }}>
-                    {genre}
-                  </ListItem>;
-                })}
-              </List>
             </Box>
           </Box>
         </Box>
