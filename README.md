@@ -51,7 +51,7 @@ These instructions will get you a copy of the project up and running on your loc
 - Express js
 - Mongo db 
 ## Live Demo
-https://splendid-gnome-825665.netlify.app/
+https://animated-strudel-7334a5.netlify.app
 ## Authors
 
 @gauravmasalkar405
