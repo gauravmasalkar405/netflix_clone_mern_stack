@@ -1,10 +1,23 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setSearchQuery } from "../app/store";
+import { useNavigate } from "react-router-dom";
 
 const MovieSuggestions = ({ movie }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // navigate to search query page where we will show movie details and storing movie to redux store
   const handleClick = () => {
-    console.log(movie);
+    dispatch(
+      setSearchQuery({
+        searchQuery: movie,
+      })
+    );
+    navigate("/searchquery");
   };
+
   return (
     <Box
       onClick={() => handleClick()}

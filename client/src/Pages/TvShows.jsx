@@ -11,9 +11,7 @@ import SelectredGenre from "../components/SelectredGenre";
 const TvShows = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isTabletScreens = useMediaQuery("(max-width: 992px)");
   const isMobileScreens = useMediaQuery("(max-width: 480px)");
-  const isDesktopScreens = useMediaQuery("(min-width:1000px)");
   const movies = useSelector((state) => state.netflix.movies);
   const genres = useSelector((state) => state.netflix.genres);
   const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
